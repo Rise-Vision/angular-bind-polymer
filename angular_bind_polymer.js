@@ -27,13 +27,14 @@ directive('bindPolymer', ['$parse', function($parse) {
 
               var attributeName, newValue, oldValue, getter;
               attributeName = mutation.attributeName;
+              //var attributeName = attributeName.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
 
-              if(attributeName in attrMap) {
+              if (attributeName in attrMap) {
                 newValue = element.attr(attributeName);
                 getter = attrMap[attributeName];
                 oldValue = getter(scope);
 
-                if(oldValue != newValue && angular.isFunction(getter.assign)) {
+                if (oldValue != newValue && angular.isFunction(getter.assign)) {
                   getter.assign(scope, newValue);
                 }
               }
@@ -44,5 +45,6 @@ directive('bindPolymer', ['$parse', function($parse) {
         observer.observe(element[0], {attributes: true});
         scope.$on('$destroy', observer.disconnect.bind(observer));
       }
+    }
   };
 }]);
