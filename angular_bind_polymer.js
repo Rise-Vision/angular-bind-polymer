@@ -21,27 +21,28 @@ directive('bindPolymer', ['$parse', function($parse) {
 
         // When Polymer sees a change to the bound variable,
         // $apply / $digest the changes here in Angular
-        var observer = new MutationObserver(function processMutations(mutations) {
-          mutations.forEach(function processMutation(mutation) {
-            var attributeName, newValue, oldValue, getter;
-            attributeName = mutation.attributeName;
+        var observer = new MutationObserver(function polymerMutationObserver(mutations) {
+          scope.$apply(function processMutationsHandler() {
+            mutations.forEach(function processMutation(mutation) {
 
-            if(attributeName in attrMap) {
-              newValue = element.attr(attributeName);
-              getter = attrMap[attributeName];
-              oldValue = getter(scope);
+              var attributeName, newValue, oldValue, getter;
+              attributeName = mutation.attributeName;
 
-              if(oldValue != newValue && angular.isFunction(getter.assign)) {
-                getter.assign(scope, newValue);
+              if(attributeName in attrMap) {
+                newValue = element.attr(attributeName);
+                getter = attrMap[attributeName];
+                oldValue = getter(scope);
+
+                if(oldValue != newValue && angular.isFunction(getter.assign)) {
+                  getter.assign(scope, newValue);
+                }
               }
-            }
+            });
           });
-          scope.$apply();
         });
 
         observer.observe(element[0], {attributes: true});
         scope.$on('$destroy', observer.disconnect.bind(observer));
       }
-    }
   };
 }]);
