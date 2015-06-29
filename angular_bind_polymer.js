@@ -11,7 +11,8 @@ directive('bindPolymer', ['$parse', function($parse) {
         if (angular.isString($attr[prop])) {
           var _match = $attr[prop].match(/\{\{\s*([\.\w]+)\s*\}\}/);
           if (_match) {
-            attrMap[prop] = $parse(_match[1]);
+            var camelCaseToHyphen = prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+            attrMap[camelCaseToHyphen] = $parse(_match[1]);
           }
         }
       }
