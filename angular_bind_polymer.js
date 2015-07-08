@@ -35,6 +35,9 @@ directive('bindPolymer', ['$parse', function($parse) {
                 oldValue = getter(scope);
 
                 if (oldValue != newValue && angular.isFunction(getter.assign)) {
+                  if(newValue !== "") {
+                    newValue = JSON.parse(newValue);
+                  }
                   getter.assign(scope, newValue);
                 }
               }
